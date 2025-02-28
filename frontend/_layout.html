@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+      {%~ include "style.css" ~%}
+    </style>
+    <script>
+      {%~ include "assets/js/htmx.org@2.0.4.js" ~%}
+    </script>
+  </head>
+  <body>
+    {%~ block content %}{% endblock ~%}
+  </body>
+</html>
