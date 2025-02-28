@@ -55,55 +55,54 @@
   </thead>
   <tbody class="divide-y divide-gray-200 bg-white">
     {% for file in files %}
-    <tr class="hover:bg-gray-100">
-      {% if file.is_directory %}
-      <td
-        hx-get="/files/{{ file.path }}{{ file.name }}"
-        hx-target="table"
-        hx-push-url="?path={{ file.path}}/{{ file.name }}"
-        class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
-      >
-        {{ file.name }}
-      </td>
-      {% else %}
-      <td
-        class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
-      >
-        {{ file.name }}
-      </td>
-      {% endif %}
-      <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-900">
-        {% if !file.is_directory %} {{ file.size|format_size }} {% else %} {{
-        "---" }} {% endif %}
-      </td>
-      <td
-        class="px-2 py-2 text-sm font-medium whitespace-nowrap text-gray-900 modified"
-      >
-        {{ file.modified }}
-      </td>
-      <td
-        class="relative py-2 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
-      >
-        <button
-          hx-get="/editor?path={{ file.path }}&file={{ file.name }}"
-          hx-trigger="click"
-          hx-target="body"
-          class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+      <tr class="hover:bg-gray-100">
+        {% if file.is_directory %}
+          <td
+            hx-get="/files/{{ file.path }}{{ file.name }}"
+            hx-target="table"
+            hx-push-url="?path={{ file.path }}/{{ file.name }}"
+            class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
+          >
+            {{ file.name }}
+          </td>
+        {% else %}
+          <td
+            class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
+          >
+            {{ file.name }}
+          </td>
+        {% endif %}
+        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-900">
+          {% if !file.is_directory %}{{ file.size|format_size }}{% else %}{{ "---" }}{% endif %}
+        </td>
+        <td
+          class="px-2 py-2 text-sm font-medium whitespace-nowrap text-gray-900 modified"
         >
-          Edit<span class="sr-only"> file</span>
-        </button>
+          {{ file.modified }}
+        </td>
+        <td
+          class="relative py-2 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
+        >
+          <button
+            hx-get="/editor?path={{ file.path }}&file={{ file.name }}"
+            hx-trigger="click"
+            hx-target="body"
+            class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+          >
+            Edit<span class="sr-only"> file</span>
+          </button>
 
-        <button
-          hx-delete="/delete?path={{ file.path }}&file={{ file.name }}"
-          hx-trigger="click[altKey]"
-          hx-target="closest tr"
-          type="button"
-          class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-        >
-          Delete<span class="sr-only"> file</span>
-        </button>
-      </td>
-    </tr>
+          <button
+            hx-delete="/delete?path={{ file.path }}&file={{ file.name }}"
+            hx-trigger="click[altKey]"
+            hx-target="closest tr"
+            type="button"
+            class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+          >
+            Delete<span class="sr-only"> file</span>
+          </button>
+        </td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
