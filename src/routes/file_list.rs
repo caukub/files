@@ -1,0 +1,145 @@
+use std::env::current_dir;
+use std::fs::Metadata;
+use std::path::{Path, PathBuf};
+use std::time::UNIX_EPOCH;
+use crate::routes::filters;
+use crate::{Files, PathRequest, File};
+use axum::extract::{Query};
+use axum::response::Html;
+use rinja::Template;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub struct GetFileQuery {
+    #[serde(deserialize_with = "deserialize_sorting")]
+    sorting: Sorting,
+}
+
+pub async fn get_file_list(
+    Query(query): Query<GetFileQuery>,
+    path: PathRequest,
+) -> Html<String> {
+    #[derive(Template, Debug)]
+    #[template(path = "file-list.html")]
+    struct Tmpl {
+        files: Files,
+        descending: bool,
+    }
+    println!("{:?}", path.directory);
+    let template = Tmpl {
+        files: sort(get_files(path.directory).await, query.sorting),
+        descending: true,
+    };
+
+    Html(template.render().unwrap())
+}
+
+
+pub async fn get_files(directory: impl AsRef<Path>) -> Files {
+    let mut files: Files = Vec::new();
+
+    let mut entries = tokio::fs::read_dir(directory).await.unwrap();
+
+    while let Some(entry) = entries.next_entry().await.unwrap() {
+        let metadata = entry.metadata().await.unwrap();
+        let path = if entry.path().parent().unwrap().to_str() == Some(".") {
+            ".".to_string()
+        } else {
+            entry.path().parent().unwrap().to_str().unwrap().to_string()
+        };
+
+        let file = File {
+            name: entry
+                .file_name()
+                .to_os_string()
+                .to_string_lossy()
+                .to_string(),
+            modified: metadata
+                .modified()
+                .unwrap()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+            size: metadata.len(),
+            is_directory: entry.file_type().await.unwrap().is_dir(),
+            path,
+        };
+
+        files.push(file);
+    }
+
+    files
+}
+fn deserialize_sorting<'de, D>(deserializer: D) -> Result<Sorting, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s: String = String::deserialize(deserializer)?;
+
+    let parts: Vec<&str> = s.split('.').collect();
+
+    match parts.as_slice() {
+        ["default", "unix"] => Ok(Sorting::Default(DefaultSortType::Unix)),
+        ["default", "windows"] => Ok(Sorting::Default(DefaultSortType::Windows)),
+        ["name", "ascending"] => Ok(Sorting::Name(SortingType::Ascending)),
+        ["name", "descending"] => Ok(Sorting::Name(SortingType::Descending)),
+        ["size", "ascending"] => Ok(Sorting::Size(SortingType::Ascending)),
+        ["size", "descending"] => Ok(Sorting::Size(SortingType::Descending)),
+        ["modified", "ascending"] => Ok(Sorting::Modified(SortingType::Ascending)),
+        ["modified", "descending"] => Ok(Sorting::Modified(SortingType::Descending)),
+        _ => Err(serde::de::Error::custom(format!(
+            "Invalid sort format: {}",
+            s
+        ))),
+    }
+}
+
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename_all = "lowercase")]
+pub enum SortingType {
+    Ascending,
+    Descending,
+}
+
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Sorting {
+    Default(DefaultSortType),
+    Name(SortingType),
+    Size(SortingType),
+    Modified(SortingType),
+}
+
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename_all = "lowercase")]
+enum DefaultSortType {
+    Unix,
+    Windows,
+}
+
+pub fn sort(mut files: Files, sorting: Sorting) -> Files {
+    match sorting {
+        Sorting::Name(order) => {
+            files.sort_by(|a, b| match order {
+                SortingType::Ascending => a.name.cmp(&b.name),
+                SortingType::Descending => b.name.cmp(&a.name),
+            });
+        }
+        Sorting::Size(order) => {
+            files.sort_by(|a, b| match order {
+                SortingType::Ascending => a.size.cmp(&b.size),
+                SortingType::Descending => b.size.cmp(&a.size),
+            });
+        }
+        Sorting::Modified(order) => {
+            files.sort_by(|a, b| match order {
+                SortingType::Ascending => a.modified.cmp(&b.modified),
+                SortingType::Descending => b.modified.cmp(&a.modified),
+            });
+        }
+        _ => {}
+    }
+    files
+}

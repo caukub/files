@@ -2,7 +2,8 @@
   <thead>
     <tr>
       <th
-        hx-get="/sort?mode=name.ascending"
+        hx-get="/files?sorting=name.ascending"
+        hx-target="table"
         id="sort-name"
         scope="col"
         class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold whitespace-nowrap text-gray-900 sm:pl-0"
@@ -10,7 +11,8 @@
         File
       </th>
       <th
-        hx-get="/sort?mode=size.ascending"
+        hx-get="/files?sorting=size.ascending"
+        hx-target="table"
         id="sort-size"
         scope="col"
         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900"
@@ -19,7 +21,7 @@
           Size
           <!-- Active: "bg-gray-200 text-gray-900 group-hover:bg-gray-300", Not Active: "invisible text-gray-400 group-hover:visible group-focus:visible" -->
           <span
-            class="ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+            class="{% if descending %}rotate-180{% endif %} ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
           >
             <svg
               class="size-5"
@@ -38,7 +40,8 @@
         </a>
       </th>
       <th
-        hx-get="/sort?mode=modified.ascending"
+        hx-get="/files?sorting=modified.ascending"
+        hx-target="table"
         id="sort-modified"
         scope="col"
         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900"
@@ -58,7 +61,7 @@
       <tr class="hover:bg-gray-100">
         {% if file.is_directory %}
           <td
-            hx-get="/files/{{ file.path }}{{ file.name }}"
+            hx-get="/files?path={{ file.path }}/{{ file.name }}&sorting=name.ascending"
             hx-target="table"
             hx-push-url="?path={{ file.path }}/{{ file.name }}"
             class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
