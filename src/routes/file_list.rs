@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use crate::routes::filters;
 use crate::{File, Files, PathRequest};
 use axum::extract::Query;
@@ -7,6 +6,7 @@ use rinja::Template;
 use serde::Deserialize;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
+use crate::sorting::FileSorter;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -37,8 +37,10 @@ pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest)
 
     let sorting = query.sorting.clone();
 
+    let files = get_files(&path.directory).await;
+    let files = FileSorter::new(files).sort(&query.sorting);
     let template = Tmpl {
-        files: sort(get_files(&path.directory).await, query.sorting),
+        files,
         sorting,
         path_request: path,
     };

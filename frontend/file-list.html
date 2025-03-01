@@ -9,7 +9,7 @@
           hx-target="#file-table"
           {% match sorting %}
           {% when Sorting::Name(SortingType::Ascending) %}
-          hx-get="/files?sorting=default.unix&path={{ path_request.directory.display() }}"
+          hx-get="/files?sorting=name.descending&path={{ path_request.directory.display() }}"
           {% when _ %}
           hx-get="/files?sorting=name.ascending&path={{ path_request.directory.display() }}"
           {% endmatch %}

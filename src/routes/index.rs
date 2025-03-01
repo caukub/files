@@ -1,6 +1,5 @@
-use std::cmp::Ordering;
 use axum::extract::Query;
-use crate::routes::file_list::{DefaultSortType, Sorting, SortingType, get_files, deserialize_sorting};
+use crate::routes::file_list::{ Sorting, SortingType, get_files, deserialize_sorting};
 use crate::routes::filters;
 use crate::{Files, PathRequest};
 use axum::response::Html;
@@ -32,7 +31,7 @@ pub async fn get_index(path_request: PathRequest, Query(query): Query<GetIndexQu
     let template = Tmpl {
         lang: "en".to_string(),
         files,
-        sorting: Sorting::Default(DefaultSortType::Unix),
+        sorting: query.sorting,
         path_request,
     };
 
