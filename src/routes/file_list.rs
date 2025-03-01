@@ -22,7 +22,7 @@ pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest)
         sorting: Sorting,
     }
 
-    let sorting = Sorting::Name(SortingType::Ascending);
+    let sorting = query.sorting.clone();
 
     let template = Tmpl {
         files: sort(get_files(path.directory).await, query.sorting),
@@ -91,14 +91,14 @@ where
     }
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum SortingType {
     Ascending,
     Descending,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Sorting {
     Default(DefaultSortType),
@@ -107,7 +107,7 @@ pub enum Sorting {
     Modified(SortingType),
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum DefaultSortType {
     Unix,
@@ -130,8 +130,8 @@ pub fn sort(mut files: Files, sorting: Sorting) -> Files {
         }
         Sorting::Modified(order) => {
             files.sort_by(|a, b| match order {
-                SortingType::Ascending => a.modified.cmp(&b.modified),
-                SortingType::Descending => b.modified.cmp(&a.modified),
+                SortingType::Ascending => b.modified.cmp(&a.modified),
+                SortingType::Descending => a.modified.cmp(&b.modified),
             });
         }
         _ => {}

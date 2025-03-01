@@ -1,2 +1,2 @@
 [general]
-dirs = ["frontend"]
+dirs = ["frontend", "templates"]

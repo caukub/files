@@ -2,7 +2,12 @@
   <thead>
     <tr>
       <th
-        hx-get="/files?sorting=name.ascending"
+              {% match sorting %}
+              {% when Sorting::Name(SortingType::Ascending) %}
+              hx-get="/files?sorting=name.descending"
+              {% when _ %}
+              hx-get="/files?sorting=name.ascending"
+              {% endmatch %}
         hx-target="table"
         id="sort-name"
         scope="col"
@@ -12,12 +17,12 @@
           File
           <span
                   {% match sorting %}
-                  {% when Sorting::Default(_) %}
-                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
+
                   {% when Sorting::Name(_) %}
                   class="{% match sorting %}{% when Sorting::Name(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
                   ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
                   {% when _ %}
+                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
                   {% endmatch %}
           >
             <svg
@@ -37,7 +42,12 @@
         </a>
       </th>
       <th
+        {% match sorting %}
+        {% when Sorting::Size(SortingType::Ascending) %}
+        hx-get="/files?sorting=size.descending"
+        {% when _ %}
         hx-get="/files?sorting=size.ascending"
+        {% endmatch %}
         hx-target="table"
         id="sort-size"
         scope="col"
@@ -47,12 +57,11 @@
           Size
           <span
                   {% match sorting %}
-                  {% when Sorting::Default(_) %}
-                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
                   {% when Sorting::Size(_) %}
                   class="{% match sorting %}{% when Sorting::Size(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
                   {% when _ %}
+                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
                   {% endmatch %}
           >
             <svg
@@ -72,7 +81,12 @@
         </a>
       </th>
       <th
-        hx-get="/files?sorting=modified.ascending"
+              {% match sorting %}
+              {% when Sorting::Modified(SortingType::Ascending) %}
+              hx-get="/files?sorting=modified.descending"
+              {% when _ %}
+              hx-get="/files?sorting=modified.ascending"
+              {% endmatch %}
         hx-target="table"
         id="sort-modified"
         scope="col"
@@ -82,12 +96,11 @@
           Modified
           <span
             {% match sorting %}
-            {% when Sorting::Default(_) %}
-            class="invisible text-gray-400 group-hover:visible group-focus:visible"
             {% when Sorting::Modified(_) %}
             class="{% match sorting %}{% when Sorting::Modified(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
             {% when _ %}
+            class="invisible text-gray-400 group-hover:visible group-focus:visible"
             {% endmatch %}
           >
             <svg
