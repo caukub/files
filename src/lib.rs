@@ -4,8 +4,8 @@ use axum::http::request::Parts;
 use std::path::PathBuf;
 
 pub mod routes;
-pub mod tracing;
 pub mod sorting;
+pub mod tracing;
 
 pub type Files = Vec<File>;
 

@@ -8,7 +8,7 @@
       <h2
           hx-target="#file-table"
           {% match sorting %}
-          {% when Sorting::Name(SortingType::Ascending) %}
+          {% when SortType::Name(SortOrder::Ascending) %}
           hx-get="/files?sorting=name.descending&path={{ path_request.directory.display() }}"
           {% when _ %}
           hx-get="/files?sorting=name.ascending&path={{ path_request.directory.display() }}"
@@ -19,8 +19,8 @@
         File
         <span
             {% match sorting %}
-            {% when Sorting::Name(_) %}
-            class="{% match sorting %}{% when Sorting::Name(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            {% when SortType::Name(_) %}
+            class="{% match sorting %}{% when SortType::Name(SortOrder::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
             {% when _ %}
             class="invisible text-gray-400 group-hover:visible group-focus:visible"
@@ -49,7 +49,7 @@
     >
       <h2
           {% match sorting %}
-          {% when Sorting::Size(SortingType::Ascending) %}
+          {% when SortType::Size(SortOrder::Ascending) %}
           hx-get="/files?sorting=size.descending&path={{ path_request.directory.display() }}"
           {% when _ %}
           hx-get="/files?sorting=size.ascending&path={{ path_request.directory.display() }}"
@@ -60,8 +60,8 @@
         Size
         <span
             {% match sorting %}
-            {% when Sorting::Size(_) %}
-            class="{% match sorting %}{% when Sorting::Size(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            {% when SortType::Size(_) %}
+            class="{% match sorting %}{% when SortType::Size(SortOrder::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
             {% when _ %}
             class="invisible text-gray-400 group-hover:visible group-focus:visible"
@@ -90,7 +90,7 @@
     >
       <h2
           {% match sorting %}
-          {% when Sorting::Modified(SortingType::Ascending) %}
+          {% when SortType::Modified(SortOrder::Ascending) %}
           hx-get="/files?sorting=modified.descending&path={{ path_request.directory.display() }}"
           {% when _ %}
           hx-get="/files?sorting=modified.ascending&path={{ path_request.directory.display() }}"
@@ -101,8 +101,8 @@
         Modified
         <span
             {% match sorting %}
-            {% when Sorting::Modified(_) %}
-            class="{% match sorting %}{% when Sorting::Modified(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            {% when SortType::Modified(_) %}
+            class="{% match sorting %}{% when SortType::Modified(SortOrder::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
             {% when _ %}
             class="invisible text-gray-400 group-hover:visible group-focus:visible"

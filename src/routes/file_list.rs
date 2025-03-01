@@ -1,4 +1,5 @@
 use crate::routes::filters;
+use crate::sorting::{FileSorter, SortOrder, SortType, deserialize_sorting};
 use crate::{File, Files, PathRequest};
 use axum::extract::Query;
 use axum::response::Html;
@@ -6,24 +7,13 @@ use rinja::Template;
 use serde::Deserialize;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
-use crate::sorting::FileSorter;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub struct GetFileQuery {
     #[serde(deserialize_with = "deserialize_sorting")]
     #[serde(default)]
-    sorting: Sorting,
-}
-
-impl Default for Sorting {
-    fn default() -> Self {
-        if cfg!(windows) {
-            Sorting::Default(DefaultSortType::Windows)
-        } else {
-            Sorting::Default(DefaultSortType::Unix)
-        }
-    }
+    sorting: SortType,
 }
 
 pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest) -> Html<String> {
@@ -31,7 +21,7 @@ pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest)
     #[template(path = "file-list.html")]
     struct Tmpl {
         files: Files,
-        sorting: Sorting,
+        sorting: SortType,
         path_request: PathRequest,
     }
 
@@ -83,50 +73,3 @@ pub async fn get_files(directory: impl AsRef<Path>) -> Files {
 
     files
 }
-pub fn deserialize_sorting<'de, D>(deserializer: D) -> Result<Sorting, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let s: String = String::deserialize(deserializer)?;
-
-    let parts: Vec<&str> = s.split('.').collect();
-
-    match parts.as_slice() {
-        ["default", "unix"] => Ok(Sorting::Default(DefaultSortType::Unix)),
-        ["default", "windows"] => Ok(Sorting::Default(DefaultSortType::Windows)),
-        ["name", "ascending"] => Ok(Sorting::Name(SortingType::Ascending)),
-        ["name", "descending"] => Ok(Sorting::Name(SortingType::Descending)),
-        ["size", "ascending"] => Ok(Sorting::Size(SortingType::Ascending)),
-        ["size", "descending"] => Ok(Sorting::Size(SortingType::Descending)),
-        ["modified", "ascending"] => Ok(Sorting::Modified(SortingType::Ascending)),
-        ["modified", "descending"] => Ok(Sorting::Modified(SortingType::Descending)),
-        _ => Err(serde::de::Error::custom(format!(
-            "Invalid sort format: {}",
-            s
-        ))),
-    }
-}
-
-#[derive(serde::Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum SortingType {
-    Ascending,
-    Descending,
-}
-
-#[derive(Debug, Deserialize, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum Sorting {
-    Default(DefaultSortType),
-    Name(SortingType),
-    Size(SortingType),
-    Modified(SortingType),
-}
-
-#[derive(serde::Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum DefaultSortType {
-    Unix,
-    Windows,
-}
-
