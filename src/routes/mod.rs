@@ -4,7 +4,6 @@ pub mod foo;
 pub mod index;
 pub mod video;
 
-
 pub mod filters {
     use humansize::DECIMAL;
     use std::str::FromStr;

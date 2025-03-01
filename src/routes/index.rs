@@ -1,11 +1,10 @@
-use std::path::PathBuf;
-use axum::extract::Query;
+use crate::routes::file_list::{DefaultSortType, Sorting, SortingType, get_files};
 use crate::routes::filters;
 use crate::{Files, PathRequest};
 use axum::response::Html;
 use rinja::Template;
 use serde::Deserialize;
-use crate::routes::file_list::get_files;
+use std::path::PathBuf;
 
 #[derive(Deserialize)]
 pub struct IndexQuery {
@@ -13,14 +12,13 @@ pub struct IndexQuery {
     pub directory: Option<PathBuf>,
 }
 
-#[axum::debug_handler]
 pub async fn get_index(path: PathRequest) -> Result<Html<String>, ()> {
     #[derive(Template, Debug)]
     #[template(path = "index.html")]
     struct Tmpl {
         lang: String,
         files: Files,
-        descending: bool,
+        sorting: Sorting,
     }
 
     let files = get_files(path.directory).await;
@@ -28,7 +26,7 @@ pub async fn get_index(path: PathRequest) -> Result<Html<String>, ()> {
     let template = Tmpl {
         lang: "en".to_string(),
         files,
-        descending: true,
+        sorting: Sorting::Default(DefaultSortType::Unix),
     };
 
     Ok(Html(template.render().unwrap()))

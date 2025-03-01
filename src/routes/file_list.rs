@@ -1,13 +1,11 @@
-use std::env::current_dir;
-use std::fs::Metadata;
-use std::path::{Path, PathBuf};
-use std::time::UNIX_EPOCH;
 use crate::routes::filters;
-use crate::{Files, PathRequest, File};
-use axum::extract::{Query};
+use crate::{File, Files, PathRequest};
+use axum::extract::Query;
 use axum::response::Html;
 use rinja::Template;
 use serde::Deserialize;
+use std::path::Path;
+use std::time::UNIX_EPOCH;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -16,25 +14,23 @@ pub struct GetFileQuery {
     sorting: Sorting,
 }
 
-pub async fn get_file_list(
-    Query(query): Query<GetFileQuery>,
-    path: PathRequest,
-) -> Html<String> {
+pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest) -> Html<String> {
     #[derive(Template, Debug)]
     #[template(path = "file-list.html")]
     struct Tmpl {
         files: Files,
-        descending: bool,
+        sorting: Sorting,
     }
-    println!("{:?}", path.directory);
+
+    let sorting = Sorting::Name(SortingType::Ascending);
+
     let template = Tmpl {
         files: sort(get_files(path.directory).await, query.sorting),
-        descending: true,
+        sorting,
     };
 
     Html(template.render().unwrap())
 }
-
 
 pub async fn get_files(directory: impl AsRef<Path>) -> Files {
     let mut files: Files = Vec::new();
@@ -102,7 +98,6 @@ pub enum SortingType {
     Descending,
 }
 
-
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Sorting {
@@ -114,7 +109,7 @@ pub enum Sorting {
 
 #[derive(serde::Deserialize, Debug)]
 #[serde(rename_all = "lowercase")]
-enum DefaultSortType {
+pub enum DefaultSortType {
     Unix,
     Windows,
 }

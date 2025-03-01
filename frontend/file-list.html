@@ -8,7 +8,33 @@
         scope="col"
         class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold whitespace-nowrap text-gray-900 sm:pl-0"
       >
-        File
+        <a href="#" class="group inline-flex">
+          File
+          <span
+                  {% match sorting %}
+                  {% when Sorting::Default(_) %}
+                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
+                  {% when Sorting::Name(_) %}
+                  class="{% match sorting %}{% when Sorting::Name(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+                  ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+                  {% when _ %}
+                  {% endmatch %}
+          >
+            <svg
+                    class="size-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    data-slot="icon"
+            >
+              <path
+                      fill-rule="evenodd"
+                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                      clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
       </th>
       <th
         hx-get="/files?sorting=size.ascending"
@@ -19,9 +45,15 @@
       >
         <a href="#" class="group inline-flex">
           Size
-          <!-- Active: "bg-gray-200 text-gray-900 group-hover:bg-gray-300", Not Active: "invisible text-gray-400 group-hover:visible group-focus:visible" -->
           <span
-            class="{% if descending %}rotate-180{% endif %} ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+                  {% match sorting %}
+                  {% when Sorting::Default(_) %}
+                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
+                  {% when Sorting::Size(_) %}
+                  class="{% match sorting %}{% when Sorting::Size(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+                  {% when _ %}
+                  {% endmatch %}
           >
             <svg
               class="size-5"
@@ -46,7 +78,33 @@
         scope="col"
         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900"
       >
-        Modified
+        <a href="#" class="group inline-flex">
+          Modified
+          <span
+            {% match sorting %}
+            {% when Sorting::Default(_) %}
+            class="invisible text-gray-400 group-hover:visible group-focus:visible"
+            {% when Sorting::Modified(_) %}
+            class="{% match sorting %}{% when Sorting::Modified(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+            {% when _ %}
+            {% endmatch %}
+          >
+            <svg
+                    class="size-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    data-slot="icon"
+            >
+              <path
+                      fill-rule="evenodd"
+                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                      clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
       </th>
       <th
         scope="col"

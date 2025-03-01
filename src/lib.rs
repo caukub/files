@@ -5,7 +5,6 @@ use std::path::PathBuf;
 
 pub mod routes;
 pub mod tracing;
-pub mod users;
 
 pub type Files = Vec<File>;
 
@@ -43,7 +42,11 @@ where
 
         let Ok(mut query) = query else {
             println!("AAA");
-            return Ok(PathRequest { directory: PathBuf::from("."), file: None, full_path: PathBuf::from(".") });
+            return Ok(PathRequest {
+                directory: PathBuf::from("."),
+                file: None,
+                full_path: PathBuf::from("."),
+            });
         };
 
         if query.directory == PathBuf::from("/") {
@@ -53,7 +56,9 @@ where
         Ok(PathRequest {
             file: Option::from(query.file.clone()),
             directory: query.directory.clone(),
-            full_path: query.directory.join(query.file.clone().unwrap_or(PathBuf::from(""))),
+            full_path: query
+                .directory
+                .join(query.file.clone().unwrap_or(PathBuf::from(""))),
         })
     }
 }
