@@ -3,6 +3,7 @@ use axum::http::StatusCode;
 use axum::http::request::Parts;
 use std::path::PathBuf;
 
+pub mod configuration;
 pub mod routes;
 pub mod sorting;
 pub mod tracing;
@@ -54,7 +55,7 @@ where
         }
 
         Ok(PathRequest {
-            file: Option::from(query.file.clone()),
+            file: query.file.clone(),
             directory: query.directory.clone(),
             full_path: query
                 .directory

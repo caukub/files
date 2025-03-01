@@ -1,9 +1,8 @@
-use std::net::SocketAddr;
-use std::str::FromStr;
 use std::time::Duration;
 
 use axum::routing::delete;
 use axum::{Router, routing::get};
+use files::configuration::get_configuration;
 use files::routes::delete::delete_file;
 use files::routes::file_list::get_file_list;
 use files::routes::foo::foo_handler;
@@ -19,12 +18,8 @@ use tracing::log::debug;
 
 #[tokio::main]
 async fn main() {
+    let configuration = get_configuration().expect("Failed to read configuration");
     init_tracing();
-
-    let app = Application {
-        host: "127.0.0.1".to_string(),
-        port: 3000,
-    };
 
     let router = Router::new()
         .route("/", get(get_index))
@@ -38,9 +33,10 @@ async fn main() {
         ))
         .nest_service("/resources", ServeDir::new("resources"));
 
-    let listener = TcpListener::bind(&app.address()).await.unwrap();
+    let address = configuration.application.address();
+    let listener = TcpListener::bind(&address).await.unwrap();
 
-    debug!("Listening on {}", &app.address());
+    debug!("Listening on {}", &address);
 
     axum::serve(listener, router)
         .with_graceful_shutdown(shutdown_signal())
@@ -69,16 +65,5 @@ async fn shutdown_signal() {
     tokio::select! {
         _ = ctrl_c => {},
         _ = terminate => {},
-    }
-}
-
-struct Application {
-    host: String,
-    port: u16,
-}
-
-impl Application {
-    fn address(&self) -> SocketAddr {
-        SocketAddr::from_str(&format!("{}:{}", self.host, self.port)).unwrap()
     }
 }

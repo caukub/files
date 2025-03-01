@@ -1,7 +1,6 @@
 use crate::routes::file_list::get_files;
 use crate::routes::filters;
-use crate::sorting::{FileSorter, SortType};
-use crate::sorting::{SortOrder, deserialize_sorting};
+use crate::sorting::{FileSorter, SortOrder, SortType, deserialize_sorting};
 use crate::{Files, PathRequest};
 use axum::extract::Query;
 use axum::response::Html;

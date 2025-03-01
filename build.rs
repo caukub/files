@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use std::{fs, fs::File};
 
 fn main() {
-    const DIR: &'static str = env!("CARGO_MANIFEST_DIR");
-    const FRONTEND_DIR: &'static str = "frontend";
+    const DIR: &str = env!("CARGO_MANIFEST_DIR");
+    const FRONTEND_DIR: &str = "frontend";
 
-    const INPUT_FILE: &'static str = "input.css";
-    const OUTPUT_FILE: &'static str = "style.css";
+    const INPUT_FILE: &str = "input.css";
+    const OUTPUT_FILE: &str = "style.css";
 
     let frontend_path = PathBuf::from(DIR).join(FRONTEND_DIR);
 
@@ -23,13 +23,13 @@ fn main() {
         File::create(&output).unwrap();
     }
 
-    const EXECUTABLE: &'static str = if cfg!(target_os = "windows") {
+    const EXECUTABLE: &str = if cfg!(target_os = "windows") {
         "tailwindcss.exe"
     } else {
         "tailwindcss"
     };
 
-    let result = std::process::Command::new(&format!("./{FRONTEND_DIR}/{EXECUTABLE}"))
+    let result = std::process::Command::new(format!("./{FRONTEND_DIR}/{EXECUTABLE}"))
         .args([
             "-i",
             &input.display().to_string(),
