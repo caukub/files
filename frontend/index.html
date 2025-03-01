@@ -1,59 +1,61 @@
 {% extends "_layout.html" %} {%- block title -%}Title{%- endblock -%}
 {%- block content -%}
-  <div class="px-4 sm:px-6 lg:px-8">
-    <div class="sm:flex sm:items-center">
-      <div class="sm:flex-auto">
-        <h1 class="text-base font-semibold text-gray-900">File Manager</h1>
-        <p class="mt-2 text-sm text-gray-700">
-          foo bar baz baz baz baz bzasfsdf
-        </p>
-      </div>
-      <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-        <button
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold text-gray-900">File Manager</h1>
+      <p class="mt-2 text-sm text-gray-700">
+        foo bar baz baz baz baz bzasfsdf
+      </p>
+    </div>
+    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <button
           type="button"
           class="block cursor-pointer rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Export
-        </button>
-      </div>
+      >
+        Export
+      </button>
     </div>
-    <div class="mt-8 flow-root">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div
+  </div>
+  <div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div
           class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           id="file-window"
-        >
-          {% include "file-list.html" %}
-        </div>
+      >
+        {% include "file-list.html" %}
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    function formatModified() {
-      document.querySelectorAll(".modified").forEach((element) => {
-        const innerText = element.innerText;
+<script>
+  function formatModified() {
+    document.querySelectorAll(".modified").forEach((element) => {
+      const innerText = element.innerText;
 
-        if (isNaN(parseInt(innerText))) return;
+      if (isNaN(parseInt(innerText))) return;
 
-        const timestamp = innerText * 1000;
-        const date = new Date(timestamp);
-        element.innerText = date.toLocaleString();
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      formatModified();
-
-      document.addEventListener("htmx:afterSwap", (event) => {
-        if (event.target.tagName.toLowerCase() === "table") {
-          formatModified();
-        }
-      });
-
-      document.addEventListener("htmx:historyRestore", (event) => {
-          // formatModified(); duplication
-      });
+      const timestamp = innerText * 1000;
+      const date = new Date(timestamp);
+      element.innerText = date.toLocaleString();
     });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    formatModified();
+
+    document.addEventListener("htmx:afterSwap", (event) => {
+      if (event.target.tagName.toLowerCase() === "table") {
+        formatModified();
+      }
+
+      /* duplication
+      document.addEventListener("htmx:historyRestore", (event) => {
+          formatModified();
+      });
+      */
+    });
+  })
   </script>
 {%- endblock -%}

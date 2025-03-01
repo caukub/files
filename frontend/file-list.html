@@ -1,48 +1,47 @@
 <table class="min-w-full divide-y divide-gray-300">
   <thead>
-    <tr>
-      <th
-
-              {% match sorting %}
-              {% when Sorting::Name(SortingType::Ascending) %}
-              hx-get="/files?sorting=name.descending&path={{ path_request.directory.display() }}"
-              {% when _ %}
-              hx-get="/files?sorting=name.ascending&path={{ path_request.directory.display() }}"
-              {% endmatch %}
+  <tr>
+    <th hx-target="table"
+        {% match sorting %}
+        {% when Sorting::Name(SortingType::Ascending) %}
+        hx-get="/files?sorting=name.descending&path={{ path_request.directory.display() }}"
+        {% when _ %}
+        hx-get="/files?sorting=name.ascending&path={{ path_request.directory.display() }}"
+        {% endmatch %}
         hx-target="table"
         id="sort-name"
         scope="col"
         class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold whitespace-nowrap text-gray-900 sm:pl-0"
-      >
-        <a href="#" class="group inline-flex">
-          File
-          <span
-                  {% match sorting %}
-
-                  {% when Sorting::Name(_) %}
-                  class="{% match sorting %}{% when Sorting::Name(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
-                  ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
-                  {% when _ %}
-                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
-                  {% endmatch %}
+    >
+      <a href="#" class="group inline-flex">
+        File
+        <span
+            class="xd"
+            {% match sorting %}
+            {% when Sorting::Name(_) %}
+            class="{% match sorting %}{% when Sorting::Name(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+            ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
+            {% when _ %}
+            class="invisible text-gray-400 group-hover:visible group-focus:visible"
+            {% endmatch %}
+        >
+          <svg
+              class="size-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+              data-slot="icon"
           >
-            <svg
-                    class="size-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    data-slot="icon"
-            >
-              <path
-                      fill-rule="evenodd"
-                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                      clip-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </a>
-      </th>
-      <th
+            <path
+                fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </a>
+    </th>
+    <th
         {% match sorting %}
         {% when Sorting::Size(SortingType::Ascending) %}
         hx-get="/files?sorting=size.descending&path={{ path_request.directory.display() }}"
@@ -53,49 +52,49 @@
         id="sort-size"
         scope="col"
         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900"
-      >
-        <a href="#" class="group inline-flex">
-          Size
-          <span
-                  {% match sorting %}
-                  {% when Sorting::Size(_) %}
-                  class="{% match sorting %}{% when Sorting::Size(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
+    >
+      <a href="#" class="group inline-flex">
+        Size
+        <span
+            {% match sorting %}
+            {% when Sorting::Size(_) %}
+            class="{% match sorting %}{% when Sorting::Size(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
             ml-2 flex-none rounded-sm bg-gray-100 text-gray-900 group-hover:bg-gray-200"
-                  {% when _ %}
-                  class="invisible text-gray-400 group-hover:visible group-focus:visible"
-                  {% endmatch %}
-          >
-            <svg
+            {% when _ %}
+            class="invisible text-gray-400 group-hover:visible group-focus:visible"
+            {% endmatch %}
+        >
+          <svg
               class="size-5"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
               data-slot="icon"
             >
-              <path
+            <path
                 fill-rule="evenodd"
                 d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
                 clip-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </a>
-      </th>
-      <th
-              {% match sorting %}
-              {% when Sorting::Modified(SortingType::Ascending) %}
-              hx-get="/files?sorting=modified.descending&path={{ path_request.directory.display() }}"
-              {% when _ %}
-              hx-get="/files?sorting=modified.ascending&path={{ path_request.directory.display() }}"
-              {% endmatch %}
+            />
+          </svg>
+        </span>
+      </a>
+    </th>
+    <th
+        {% match sorting %}
+        {% when Sorting::Modified(SortingType::Ascending) %}
+        hx-get="/files?sorting=modified.descending&path={{ path_request.directory.display() }}"
+        {% when _ %}
+        hx-get="/files?sorting=modified.ascending&path={{ path_request.directory.display() }}"
+        {% endmatch %}
         hx-target="table"
         id="sort-modified"
         scope="col"
         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900"
-      >
-        <a href="#" class="group inline-flex">
-          Modified
-          <span
+    >
+      <a href="#" class="group inline-flex">
+        Modified
+        <span
             {% match sorting %}
             {% when Sorting::Modified(_) %}
             class="{% match sorting %}{% when Sorting::Modified(SortingType::Descending) %}rotate-180{% else %}{% endmatch %}
@@ -103,82 +102,81 @@
             {% when _ %}
             class="invisible text-gray-400 group-hover:visible group-focus:visible"
             {% endmatch %}
+        >
+          <svg
+              class="size-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+              data-slot="icon"
           >
-            <svg
-                    class="size-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    data-slot="icon"
-            >
-              <path
-                      fill-rule="evenodd"
-                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                      clip-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </a>
-      </th>
-      <th
+            <path
+                fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </a>
+    </th>
+    <th
         scope="col"
         class="relative py-3.5 pr-4 pl-3 whitespace-nowrap sm:pr-0"
-      >
-        <span class="sr-only">Actions</span>
-      </th>
-    </tr>
+    >
+      <span class="sr-only">Actions</span>
+    </th>
+  </tr>
   </thead>
   <tbody class="divide-y divide-gray-200 bg-white">
-    {% for file in files %}
-      <tr class="hover:bg-gray-100">
-        {% if file.is_directory %}
-          <td
-            hx-get="/files?path={{ file.path }}/{{ file.name }}"
-            hx-target="table"
-            hx-push-url="?path={{ file.path }}/{{ file.name }}"
-            class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
-          >
-            {{ file.name }}
-          </td>
-        {% else %}
-          <td
-            class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
-          >
-            {{ file.name }}
-          </td>
-        {% endif %}
-        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-900">
-          {% if !file.is_directory %}{{ file.size|format_size }}{% else %}{{ "---" }}{% endif %}
-        </td>
-        <td
-          class="px-2 py-2 text-sm font-medium whitespace-nowrap text-gray-900 modified"
-        >
-          {{ file.modified }}
-        </td>
-        <td
-          class="relative py-2 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
-        >
-          <button
-            hx-get="/editor?path={{ file.path }}&file={{ file.name }}"
-            hx-trigger="click"
-            hx-target="body"
-            class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-          >
-            Edit<span class="sr-only"> file</span>
-          </button>
+  {% for file in files %}
+  <tr class="hover:bg-gray-100">
+    {% if file.is_directory %}
+    <td
+        hx-get="/files?path={{ file.path }}/{{ file.name }}"
+        hx-target="table"
+        hx-push-url="?path={{ file.path }}/{{ file.name }}"
+        class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
+    >
+      {{ file.name }}
+    </td>
+    {% else %}
+    <td
+        class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
+    >
+      {{ file.name }}
+    </td>
+    {% endif %}
+    <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-900">
+      {% if !file.is_directory %}{{ file.size|format_size }}{% else %}{{ "---" }}{% endif %}
+    </td>
+    <td
+            class="px-2 py-2 text-sm font-medium whitespace-nowrap text-gray-900 modified"
+    >
+      {{ file.modified }}
+    </td>
+    <td
+        class="relative py-2 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
+    >
+      <button
+          hx-get="/editor?path={{ file.path }}&file={{ file.name }}"
+          hx-trigger="click"
+          hx-target="body"
+          class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+      >
+        Edit<span class="sr-only"> file</span>
+      </button>
 
-          <button
-            hx-delete="/delete?path={{ file.path }}&file={{ file.name }}"
-            hx-trigger="click[altKey]"
-            hx-target="closest tr"
-            type="button"
-            class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-          >
-            Delete (nutno drzet Alt klavesu)<span class="sr-only"> file</span>
-          </button>
-        </td>
-      </tr>
-    {% endfor %}
+      <button
+          hx-delete="/delete?path={{ file.path }}&file={{ file.name }}"
+          hx-trigger="click[altKey]"
+          hx-target="closest tr"
+          type="button"
+          class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+      >
+        Delete<span class="sr-only"> file</span>
+      </button>
+    </td>
+  </tr>
+  {% endfor %}
   </tbody>
 </table>
 
