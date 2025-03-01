@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use crate::routes::filters;
 use crate::{File, Files, PathRequest};
 use axum::extract::Query;
@@ -17,7 +18,11 @@ pub struct GetFileQuery {
 
 impl Default for Sorting {
     fn default() -> Self {
-        Sorting::Default(DefaultSortType::Unix)
+        if cfg!(windows) {
+            Sorting::Default(DefaultSortType::Windows)
+        } else {
+            Sorting::Default(DefaultSortType::Unix)
+        }
     }
 }
 
@@ -76,7 +81,7 @@ pub async fn get_files(directory: impl AsRef<Path>) -> Files {
 
     files
 }
-fn deserialize_sorting<'de, D>(deserializer: D) -> Result<Sorting, D::Error>
+pub fn deserialize_sorting<'de, D>(deserializer: D) -> Result<Sorting, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
@@ -123,27 +128,3 @@ pub enum DefaultSortType {
     Windows,
 }
 
-pub fn sort(mut files: Files, sorting: Sorting) -> Files {
-    match sorting {
-        Sorting::Name(order) => {
-            files.sort_by(|a, b| match order {
-                SortingType::Ascending => a.name.cmp(&b.name),
-                SortingType::Descending => b.name.cmp(&a.name),
-            });
-        }
-        Sorting::Size(order) => {
-            files.sort_by(|a, b| match order {
-                SortingType::Ascending => b.size.cmp(&a.size),
-                SortingType::Descending => a.size.cmp(&b.size),
-            });
-        }
-        Sorting::Modified(order) => {
-            files.sort_by(|a, b| match order {
-                SortingType::Ascending => b.modified.cmp(&a.modified),
-                SortingType::Descending => a.modified.cmp(&b.modified),
-            });
-        }
-        _ => {}
-    }
-    files
-}

@@ -46,16 +46,25 @@
     formatModified();
 
     document.addEventListener("htmx:afterSwap", (event) => {
-      if (event.target.tagName.toLowerCase() === "table") {
+      if (event.target.id === "file-table") {
         formatModified();
       }
-
-      /* duplication
-      document.addEventListener("htmx:historyRestore", (event) => {
-          formatModified();
-      });
-      */
     });
-  })
-  </script>
+
+    document.addEventListener("htmx:historyRestore", () => {
+      formatModified();
+    });
+});
+</script>
+
+<button
+        hx-get="/video"
+        hx-target="#video-container"
+        hx-swap="innerHTML"
+        class="cursor-pointer"
+>
+  Show Video
+</button>
+
+<div id="video-container"></div>
 {%- endblock -%}

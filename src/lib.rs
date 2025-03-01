@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 pub mod routes;
 pub mod tracing;
+pub mod sorting;
 
 pub type Files = Vec<File>;
 
@@ -14,7 +15,7 @@ pub struct File {
     pub modified: u64,
     pub size: u64,
     pub path: String,
-    pub is_directory: bool, // nechat a tes e neplete s path
+    pub is_directory: bool,
 }
 
 #[derive(Debug)]
@@ -41,7 +42,6 @@ where
         let query = Query::<FilePath>::from_request_parts(parts, state).await;
 
         let Ok(mut query) = query else {
-            println!("AAA");
             return Ok(PathRequest {
                 directory: PathBuf::from("."),
                 file: None,
