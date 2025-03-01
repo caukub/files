@@ -9,15 +9,13 @@ use std::path::Path;
 use std::time::UNIX_EPOCH;
 
 #[derive(Deserialize)]
-#[serde(rename_all = "lowercase")]
 pub struct GetFileQuery {
-    #[serde(deserialize_with = "deserialize_sorting")]
-    #[serde(default)]
+    #[serde(default, deserialize_with = "deserialize_sorting")]
     sorting: SortType,
 }
 
 pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest) -> Html<String> {
-    #[derive(Template, Debug)]
+    #[derive(Template)]
     #[template(path = "file-list.html")]
     struct Tmpl {
         files: Files,

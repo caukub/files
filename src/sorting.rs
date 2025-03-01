@@ -68,14 +68,14 @@ where
     }
 }
 
-#[derive(serde::Deserialize, Debug, Clone)]
+#[derive(serde::Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum SortOrder {
     Ascending,
     Descending,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum SortType {
     Default(SortTypeDefault),
@@ -84,7 +84,7 @@ pub enum SortType {
     Modified(SortOrder),
 }
 
-#[derive(serde::Deserialize, Debug, Clone)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum SortTypeDefault {
     Unix,

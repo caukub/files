@@ -8,14 +8,12 @@ use rinja::Template;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-#[serde(rename_all = "lowercase")]
 pub struct GetIndexQuery {
-    #[serde(deserialize_with = "deserialize_sorting")]
-    #[serde(default)]
+    #[serde(default, deserialize_with = "deserialize_sorting")]
     sorting: SortType,
 }
 
-#[derive(Template, Debug)]
+#[derive(Template)]
 #[template(path = "index.html")]
 struct Tmpl {
     lang: String,

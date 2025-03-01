@@ -10,7 +10,6 @@ pub mod tracing;
 
 pub type Files = Vec<File>;
 
-#[derive(Debug)]
 pub struct File {
     pub name: String,
     pub modified: u64,
@@ -19,7 +18,6 @@ pub struct File {
     pub is_directory: bool,
 }
 
-#[derive(Debug)]
 pub struct PathRequest {
     pub directory: PathBuf,
     pub file: Option<PathBuf>,

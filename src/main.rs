@@ -11,9 +11,7 @@ use files::routes::video::video_handler;
 use files::tracing::init_tracing;
 use tokio::net::TcpListener;
 use tokio::signal;
-use tower_http::services::ServeDir;
-use tower_http::timeout::TimeoutLayer;
-use tower_http::trace::TraceLayer;
+use tower_http::{services::ServeDir, timeout::TimeoutLayer, trace::TraceLayer};
 use tracing::log::debug;
 
 #[tokio::main]

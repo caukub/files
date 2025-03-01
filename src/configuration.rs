@@ -9,8 +9,8 @@ pub struct Settings {
 
 #[derive(Deserialize, Clone)]
 pub struct Application {
-    pub host: String,
-    pub port: u16,
+    host: String,
+    port: u16,
 }
 
 impl Application {
