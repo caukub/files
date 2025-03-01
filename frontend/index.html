@@ -40,6 +40,7 @@ Title
       const innerText = element.innerText;
 
       if (isNaN(parseInt(innerText))) return;
+      if (!isNaN(new Date(innerText).getTime())) return;
 
       const timestamp = innerText * 1000;
       const date = new Date(timestamp);
