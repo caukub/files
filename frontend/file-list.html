@@ -2,11 +2,12 @@
   <thead>
     <tr>
       <th
+
               {% match sorting %}
               {% when Sorting::Name(SortingType::Ascending) %}
-              hx-get="/files?sorting=name.descending"
+              hx-get="/files?sorting=name.descending&path={{ path_request.directory.display() }}"
               {% when _ %}
-              hx-get="/files?sorting=name.ascending"
+              hx-get="/files?sorting=name.ascending&path={{ path_request.directory.display() }}"
               {% endmatch %}
         hx-target="table"
         id="sort-name"
@@ -44,9 +45,9 @@
       <th
         {% match sorting %}
         {% when Sorting::Size(SortingType::Ascending) %}
-        hx-get="/files?sorting=size.descending"
+        hx-get="/files?sorting=size.descending&path={{ path_request.directory.display() }}"
         {% when _ %}
-        hx-get="/files?sorting=size.ascending"
+        hx-get="/files?sorting=size.ascending&path={{ path_request.directory.display() }}"
         {% endmatch %}
         hx-target="table"
         id="sort-size"
@@ -83,9 +84,9 @@
       <th
               {% match sorting %}
               {% when Sorting::Modified(SortingType::Ascending) %}
-              hx-get="/files?sorting=modified.descending"
+              hx-get="/files?sorting=modified.descending&path={{ path_request.directory.display() }}"
               {% when _ %}
-              hx-get="/files?sorting=modified.ascending"
+              hx-get="/files?sorting=modified.ascending&path={{ path_request.directory.display() }}"
               {% endmatch %}
         hx-target="table"
         id="sort-modified"
@@ -132,7 +133,7 @@
       <tr class="hover:bg-gray-100">
         {% if file.is_directory %}
           <td
-            hx-get="/files?path={{ file.path }}/{{ file.name }}&sorting=name.ascending"
+            hx-get="/files?path={{ file.path }}/{{ file.name }}"
             hx-target="table"
             hx-push-url="?path={{ file.path }}/{{ file.name }}"
             class="cursor-pointer py-2 pr-3 pl-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0"
@@ -173,7 +174,7 @@
             type="button"
             class="cursor-pointer inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
           >
-            Delete<span class="sr-only"> file</span>
+            Delete (nutno drzet Alt klavesu)<span class="sr-only"> file</span>
           </button>
         </td>
       </tr>

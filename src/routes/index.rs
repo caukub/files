@@ -12,21 +12,23 @@ pub struct IndexQuery {
     pub directory: Option<PathBuf>,
 }
 
-pub async fn get_index(path: PathRequest) -> Result<Html<String>, ()> {
+pub async fn get_index(path_request: PathRequest) -> Result<Html<String>, ()> {
     #[derive(Template, Debug)]
     #[template(path = "index.html")]
     struct Tmpl {
         lang: String,
         files: Files,
         sorting: Sorting,
+        path_request: PathRequest,
     }
 
-    let files = get_files(path.directory).await;
+    let files = get_files(&path_request.directory).await;
 
     let template = Tmpl {
         lang: "en".to_string(),
         files,
         sorting: Sorting::Default(DefaultSortType::Unix),
+        path_request,
     };
 
     Ok(Html(template.render().unwrap()))

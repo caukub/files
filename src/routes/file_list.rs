@@ -11,7 +11,14 @@ use std::time::UNIX_EPOCH;
 #[serde(rename_all = "lowercase")]
 pub struct GetFileQuery {
     #[serde(deserialize_with = "deserialize_sorting")]
+    #[serde(default)]
     sorting: Sorting,
+}
+
+impl Default for Sorting {
+    fn default() -> Self {
+        Sorting::Default(DefaultSortType::Unix)
+    }
 }
 
 pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest) -> Html<String> {
@@ -20,13 +27,15 @@ pub async fn get_file_list(Query(query): Query<GetFileQuery>, path: PathRequest)
     struct Tmpl {
         files: Files,
         sorting: Sorting,
+        path_request: PathRequest,
     }
 
     let sorting = query.sorting.clone();
 
     let template = Tmpl {
-        files: sort(get_files(path.directory).await, query.sorting),
+        files: sort(get_files(&path.directory).await, query.sorting),
         sorting,
+        path_request: path,
     };
 
     Html(template.render().unwrap())
@@ -124,8 +133,8 @@ pub fn sort(mut files: Files, sorting: Sorting) -> Files {
         }
         Sorting::Size(order) => {
             files.sort_by(|a, b| match order {
-                SortingType::Ascending => a.size.cmp(&b.size),
-                SortingType::Descending => b.size.cmp(&a.size),
+                SortingType::Ascending => b.size.cmp(&a.size),
+                SortingType::Descending => a.size.cmp(&b.size),
             });
         }
         Sorting::Modified(order) => {
