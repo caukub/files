@@ -2,19 +2,17 @@ use crate::Files;
 use serde::Deserialize;
 use std::cmp::Ordering;
 
-pub struct FileSorter {
-    files: Files,
-}
+pub struct FileSorter(Files);
 
 impl FileSorter {
     pub fn new(files: Files) -> Self {
-        Self { files }
+        Self(files)
     }
 
     pub fn sort(mut self, sort_type: &SortType) -> Files {
         match sort_type {
             SortType::Default(_) => {
-                self.files
+                self.0
                     .sort_by(|a, b| match (a.is_directory, b.is_directory) {
                         (true, false) => Ordering::Less,
                         (false, true) => Ordering::Greater,
@@ -22,25 +20,25 @@ impl FileSorter {
                     });
             }
             SortType::Name(order) => {
-                self.files.sort_by(|a, b| match order {
+                self.0.sort_by(|a, b| match order {
                     SortOrder::Ascending => a.name.cmp(&b.name),
                     SortOrder::Descending => b.name.cmp(&a.name),
                 });
             }
             SortType::Size(order) => {
-                self.files.sort_by(|a, b| match order {
+                self.0.sort_by(|a, b| match order {
                     SortOrder::Ascending => b.size.cmp(&a.size),
                     SortOrder::Descending => a.size.cmp(&b.size),
                 });
             }
             SortType::Modified(order) => {
-                self.files.sort_by(|a, b| match order {
+                self.0.sort_by(|a, b| match order {
                     SortOrder::Ascending => b.modified.cmp(&a.modified),
                     SortOrder::Descending => a.modified.cmp(&b.modified),
                 });
             }
         }
-        self.files
+        self.0
     }
 }
 
@@ -75,7 +73,7 @@ pub enum SortOrder {
     Descending,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SortType {
     Default(SortTypeDefault),
@@ -84,7 +82,7 @@ pub enum SortType {
     Modified(SortOrder),
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SortTypeDefault {
     Unix,

@@ -1,4 +1,5 @@
-use crate::routes::file_list::get_files;
+use crate::error::AppError;
+use crate::routes::file_list::read_directory;
 use crate::routes::filters;
 use crate::sorting::{FileSorter, SortOrder, SortType, deserialize_sorting};
 use crate::{Files, PathRequest};
@@ -15,7 +16,7 @@ pub struct GetIndexQuery {
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct Tmpl {
+struct IndexTemplate {
     lang: String,
     files: Files,
     sorting: SortType,
@@ -25,16 +26,18 @@ struct Tmpl {
 pub async fn get_index(
     path_request: PathRequest,
     Query(query): Query<GetIndexQuery>,
-) -> Result<Html<String>, ()> {
-    let files = get_files(&path_request.directory).await;
+) -> Result<Html<String>, AppError> {
+    let files = read_directory(&path_request.directory)
+        .await
+        .map_err(|_err| AppError::ReadingDirectory)?;
     let files = FileSorter::new(files).sort(&query.sorting);
 
-    let template = Tmpl {
+    let template = IndexTemplate {
         lang: "en".to_string(),
         files,
         sorting: query.sorting,
         path_request,
     };
 
-    Ok(Html(template.render().unwrap()))
+    Ok(Html(template.render().map_err(|_| AppError::Foo)?))
 }

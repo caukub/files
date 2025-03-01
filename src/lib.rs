@@ -4,6 +4,7 @@ use axum::http::request::Parts;
 use std::path::PathBuf;
 
 pub mod configuration;
+pub mod error;
 pub mod routes;
 pub mod sorting;
 pub mod tracing;
