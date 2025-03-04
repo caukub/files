@@ -4,6 +4,7 @@ use crate::sorting::{FileSorter, SortOrder, SortType, deserialize_sorting};
 use crate::{File, Files, PathRequest};
 use axum::extract::Query;
 use axum::response::Html;
+use chrono::DateTime;
 use rinja::Template;
 use serde::Deserialize;
 use std::path::Path;
@@ -48,7 +49,7 @@ pub async fn read_directory(directory: impl AsRef<Path>) -> Result<Files, AppErr
 
     let mut entries = tokio::fs::read_dir(directory)
         .await
-        .map_err(|x| AppError::ReadingDirectory)?;
+        .map_err(|_err| AppError::ReadingDirectory)?;
 
     while let Some(entry) = entries.next_entry().await.map_err(|_| AppError::Foo)? {
         let metadata = entry.metadata().await.map_err(|_| AppError::Foo)?;
@@ -74,12 +75,15 @@ pub async fn read_directory(directory: impl AsRef<Path>) -> Result<Files, AppErr
 
         let is_directory = entry.file_type().await.map_err(|_| AppError::Foo)?.is_dir();
 
+        let date_modified = DateTime::from_timestamp(modified as i64, 0).unwrap();
+
         let file = File {
             name,
             modified,
             size,
             is_directory,
             path,
+            date_modified,
         };
 
         files.push(file);

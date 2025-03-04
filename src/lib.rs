@@ -1,6 +1,7 @@
 use axum::extract::{FromRequestParts, Query};
 use axum::http::StatusCode;
 use axum::http::request::Parts;
+use chrono::{DateTime, Utc};
 use std::path::PathBuf;
 
 pub mod configuration;
@@ -17,12 +18,20 @@ pub struct File {
     pub size: u64,
     pub path: String,
     pub is_directory: bool,
+    pub date_modified: DateTime<Utc>,
 }
 
 pub struct PathRequest {
     pub directory: PathBuf,
     pub file: Option<PathBuf>,
     pub full_path: PathBuf,
+}
+
+#[derive(serde::Deserialize)]
+struct FilePath {
+    #[serde(rename = "path")]
+    directory: PathBuf,
+    file: Option<PathBuf>,
 }
 
 impl<S> FromRequestParts<S> for PathRequest
@@ -32,13 +41,6 @@ where
     type Rejection = (StatusCode, &'static str);
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        #[derive(serde::Deserialize)]
-        struct FilePath {
-            #[serde(rename = "path")]
-            directory: PathBuf,
-            file: Option<PathBuf>,
-        }
-
         let query = Query::<FilePath>::from_request_parts(parts, state).await;
 
         let Ok(mut query) = query else {

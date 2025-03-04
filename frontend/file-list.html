@@ -155,8 +155,9 @@
     </td>
     <td
             class="px-2 py-2 text-sm font-medium whitespace-nowrap text-gray-900 modified"
+            timestamp="{{ file.modified }}"
     >
-      {{ file.modified }}
+      {{ file.date_modified.to_rfc3339() }}
     </td>
     <td
         class="relative py-2 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"

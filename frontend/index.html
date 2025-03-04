@@ -37,30 +37,34 @@ Title
 <script>
   function formatModified() {
     document.querySelectorAll(".modified").forEach((element) => {
-      const innerText = element.innerText;
+      const modified = element.getAttribute("timestamp");
 
-      if (isNaN(parseInt(innerText))) return;
-      if (!isNaN(new Date(innerText).getTime())) return;
+      if (isNaN(parseInt(modified))) return;
+      if (!isNaN(new Date(modified).getTime())) return;
 
-      const timestamp = innerText * 1000;
+      const timestamp = modified * 1000;
       const date = new Date(timestamp);
       element.innerText = date.toLocaleString();
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    formatModified();
+  let modifiedBrowserFormat = false;
 
-    document.addEventListener("htmx:afterSwap", (event) => {
-      if (event.target.id === "file-table") {
-        formatModified();
-      }
-    });
-
-    document.addEventListener("htmx:historyRestore", () => {
+  if (modifiedBrowserFormat) {
+    document.addEventListener("DOMContentLoaded", () => {
       formatModified();
+
+      document.addEventListener("htmx:afterSwap", (event) => {
+        if (event.target.id === "file-table") {
+          formatModified();
+        }
+      });
+
+      document.addEventListener("htmx:historyRestore", () => {
+        formatModified();
+      });
     });
-});
+  }
 </script>
 
 <button
