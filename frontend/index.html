@@ -35,6 +35,7 @@ Title
 </div>
 
 <script>
+
   function formatModified() {
     document.querySelectorAll(".modified").forEach((element) => {
       const modified = element.getAttribute("timestamp");
@@ -48,7 +49,8 @@ Title
     });
   }
 
-  let modifiedBrowserFormat = false;
+  let modifiedBrowserFormat = localStorage.getItem("modifiedFormatLocal") ?? false;
+  console.log("test");
 
   if (modifiedBrowserFormat) {
     document.addEventListener("DOMContentLoaded", () => {

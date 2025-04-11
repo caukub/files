@@ -12,4 +12,9 @@ pub mod filters {
         let size = usize::from_str(&s.to_string()).unwrap();
         Ok(humansize::format_size(size, DECIMAL))
     }
+
+    pub fn testfilter<T: std::fmt::Display>(s: T) -> rinja::Result<String> {
+        let s = s.to_string();
+        Ok(s)
+    }
 }

@@ -66,7 +66,7 @@ where
     }
 }
 
-#[derive(serde::Deserialize, Clone)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum SortOrder {
     Ascending,
